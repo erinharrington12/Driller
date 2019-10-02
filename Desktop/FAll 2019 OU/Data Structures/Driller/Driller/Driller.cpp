@@ -152,54 +152,43 @@ int main()
 
 			correctDate = dates.at(0); //Sets the correct date to the first value in the dates vector
 			if (dates.at(lineNumber - 1).compare(correctDate) != 0) { //Compares the current date to the correct date 
-				cout << "Date mismatch; file closed" << endl;
-				currentFile.close();
-				dataLoop = true;
+				cout << "Non-matching date stamp " << dates.at(lineNumber -1 ) << " at line " << lineNumber << "." << endl;
+				
+				
 				
 			}
 			else {
-				//If current date matches the first date
-				if (find(timeStamps.begin(), timeStamps.end(), time) != timeStamps.end()) { //Tries to find a duplicate time stamp in timeStamps vector
-					cout << "Duplicate timestamp " << time << " at line " << lineNumber << "." << endl;
-				}
+				bool isValid = true;
+				index = 0;
+				while (getline(lineStream, values, ',')) { //Checks if the current float value is zero or negative
 
-				else {
-					//If current date matches the first date AND there the time stamp isn't a duplicate
+					float floatValues = stof(values);
+					points.push_back(floatValues);
+					currentRecord.nums[index] = floatValues;
+					if (floatValues <= 0) {
+						points.clear();
+						cout << "Invalid floating-point data at line " << lineNumber << "." << endl;
+						isValid = false;
+						++index;
+						break;
+					}
+					++index;
+				}
+				if (isValid) {
+					myArray->data[size] = currentRecord;
+					++size;
 					timeStamps.push_back(time);
 					currentRecord.strings[1] = time;
-					bool isValid = true;
-					index = 0;
-					while (getline(lineStream, values, ',')) { //Checks if the current float value is zero or negative
-
-						float floatValues = stof(values);
-						points.push_back(floatValues);
-						currentRecord.nums[index] = floatValues;
-						if (floatValues <= 0) {
-							points.clear();
-							cout << "Invalid floating-point data at line " << lineNumber << "." << endl;
-							isValid = false;
-							++index;
-							break;
-						}
-						++index;
-					}
-
-
-
-					if (isValid) {
-						myArray->data[size] = currentRecord;
-						++size;
-					}
-
-					//if (exit == 0)
-					//{ // If everything is good and valid, last step. Outputs the original line but with semicolons instead of commas
-					//	replace(input.begin(), input.end(), ',', ';');
-					//	cout << input << endl;
-
-					//}
-
-
 				}
+				
+			
+				//
+				////If current date matches the first date
+				//if (find(timeStamps.begin(), timeStamps.end(), time) != timeStamps.end()) { //Tries to find a duplicate time stamp in timeStamps vector
+				//	cout << "Duplicate timestamp " << time << " at line " << lineNumber << "." << endl;
+				//}
+
+				
 
 
 
