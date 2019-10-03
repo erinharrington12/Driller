@@ -110,95 +110,95 @@ int main()
 
 	int size = 0;
 
-	while (dataManip == true) {
-		while (dataLoop == true) {
+	while (dataLoop == true) {
 
-			cout << "Enter data file name: ";
+		cout << "Enter data file name: ";
 
-			cin >> fileName;
-			currentFile.open(fileName); //Opens the file
+		cin >> fileName;
+		currentFile.open(fileName); //Opens the file
 
-			if (!(currentFile.is_open())) {
+		if (!(currentFile.is_open())) {
 
-				cout << "File is not available" << endl;
+			cout << "File is not available" << endl;
 
-			}
-			else {
-				cout << "File opened!" << endl;
-				dataLoop = false; //Exits data input loop
-				dataManip = true;
-			}
 		}
-		while (getline(currentFile, input)) { //Grabs first line of data // Data manipulation loop
-			if (lineNumber == myArray->capacity) {
-				myArray = doubleDrillingArray(myArray);
+		else {
+			cout << "File opened!" << endl;
+			dataLoop = false; //Exits data input loop
+			dataManip = true;
+		}
+	}
+	while (getline(currentFile, input)) { //Grabs first line of data // Data manipulation loop
+		if (lineNumber == myArray->capacity) {
+			myArray = doubleDrillingArray(myArray);
 
-			}
-
-
-			drillingRecord currentRecord;
-			istringstream lineStream(input); //Creates a stream out of input
-			getline(lineStream, date, ','); //Gets first date before the first comma
-			++lineNumber;
-			dates.push_back(date); //Pushes back date into the dates vector
-			currentRecord.strings[0] = dates.at(0);
-			getline(lineStream, time, ','); //Stores first time stamp in "time"
-
-			//getline(lineStream, values, ','); //Stores the first floating-point value in "values"
+		}
 
 
+		drillingRecord currentRecord;
+		istringstream lineStream(input); //Creates a stream out of input
+		getline(lineStream, date, ','); //Gets first date before the first comma
+		++lineNumber;
+		dates.push_back(date); //Pushes back date into the dates vector
+		currentRecord.strings[0] = dates.at(0);
+		getline(lineStream, time, ','); //Stores first time stamp in "time"
+
+		//getline(lineStream, values, ','); //Stores the first floating-point value in "values"
 
 
 
-			correctDate = dates.at(0); //Sets the correct date to the first value in the dates vector
-			if (dates.at(lineNumber - 1).compare(correctDate) != 0) { //Compares the current date to the correct date 
-				cout << "Non-matching date stamp " << dates.at(lineNumber -1 ) << " at line " << lineNumber << "." << endl;
-				
-				
-				
-			}
-			else {
-				bool isValid = true;
-				index = 0;
-				while (getline(lineStream, values, ',')) { //Checks if the current float value is zero or negative
 
-					float floatValues = stof(values);
-					points.push_back(floatValues);
-					currentRecord.nums[index] = floatValues;
-					if (floatValues <= 0) {
-						points.clear();
-						cout << "Invalid floating-point data at line " << lineNumber << "." << endl;
-						isValid = false;
-						++index;
-						break;
-					}
+
+		correctDate = dates.at(0); //Sets the correct date to the first value in the dates vector
+		if (dates.at(lineNumber - 1).compare(correctDate) != 0) { //Compares the current date to the correct date 
+			cout << "Non-matching date stamp " << dates.at(lineNumber - 1) << " at line " << lineNumber << "." << endl;
+
+
+
+		}
+		else {
+			bool isValid = true;
+			index = 0;
+			while (getline(lineStream, values, ',')) { //Checks if the current float value is zero or negative
+
+				float floatValues = stof(values);
+				points.push_back(floatValues);
+				currentRecord.nums[index] = floatValues;
+				if (floatValues <= 0) {
+					points.clear();
+					cout << "Invalid floating-point data at line " << lineNumber << "." << endl;
+					isValid = false;
 					++index;
+					break;
 				}
-				if (isValid) {
-					myArray->data[size] = currentRecord;
-					++size;
-					timeStamps.push_back(time);
-					currentRecord.strings[1] = time;
-				}
-				
-			
-				//
-				////If current date matches the first date
-				//if (find(timeStamps.begin(), timeStamps.end(), time) != timeStamps.end()) { //Tries to find a duplicate time stamp in timeStamps vector
-				//	cout << "Duplicate timestamp " << time << " at line " << lineNumber << "." << endl;
-				//}
-
-				
-
-
-
-
+				++index;
+			}
+			if (isValid) {
+				myArray->data[size] = currentRecord;
+				++size;
+				timeStamps.push_back(time);
+				currentRecord.strings[1] = time;
 			}
 
 
-		}
-		
+			//
+			////If current date matches the first date
+			//if (find(timeStamps.begin(), timeStamps.end(), time) != timeStamps.end()) { //Tries to find a duplicate time stamp in timeStamps vector
+			//	cout << "Duplicate timestamp " << time << " at line " << lineNumber << "." << endl;
+			//}
 
+
+
+
+
+
+		}
+
+
+	}
+
+	for (string x : timeStamps) {
+		cout << x << endl;
 	}
 	
 	for (int i = size - 1; i >= 0; i--) {
